@@ -1,0 +1,15 @@
+<div class="input-group">
+    <span class="mr-2">Couleur: </span>
+    <span class="p-field-radiobutton">
+        <p-radioButton id="colorRed" name="color" [value]="ColorEnum.RED" [(ngModel)]="selectedColor"></p-radioButton>
+        <label class="mx-2" for="colorRed">Rouge</label>
+    </span>
+    <span class="p-field-radiobutton">
+        <p-radioButton id="colorYellow" name="color" [value]="ColorEnum.YELLOW" [(ngModel)]="selectedColor"></p-radioButton>
+        <label class="mx-2" for="colorYellow">Jaune</label>
+    </span>
+</div>
+<div class="input-group">
+    <button pButton (click)="createGame()">Créer</button>
+</div>
+

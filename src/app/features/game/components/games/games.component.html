@@ -1,0 +1,25 @@
+<ng-content></ng-content>
+
+<p-table [value]="allGames">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Statut</th>
+            <th>Rouge</th>
+            <th></th>
+            <th>Jaune</th>
+            <th>Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-game>
+        <tr>
+            <td>{{ game.status }}</td>
+            <td>{{ game.redUsername }}</td>
+            <td>VS</td>
+            <td>{{ game.yellowUsername }}</td>
+            <td>
+                <button [disabled]="currentGame?.id === game.id || game.status === GameStatusEnum.IN_PROGRESS" pButton class="m-1 p-button-sm p-button-success" icon="pi pi-play" (click)="join(game.id)"></button>
+                <button [disabled]="currentGame?.id === game.id" pButton class="m-1 p-button-sm p-button-info" icon="pi pi-eye" (click)="watch(game.id)"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
