@@ -49,7 +49,7 @@ export class BoardComponent extends DestroyedComponent implements OnInit {
 
   leaveGame() {
     if(this.currentGame) {
-      this._gameService.leave({ gameId: this.currentGame.id });
+      this._gameService.abandon({ gameId: this.currentGame.id });
     }
   }
 }

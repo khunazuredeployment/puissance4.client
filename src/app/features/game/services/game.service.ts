@@ -53,8 +53,8 @@ export class GameService {
       .catch(this._errorHandler);
   }
 
-  leave(value: any) {
-    this._hubConnection.invoke('leaveGame', { ...value, definitive: true })
+  abandon(value: any) {
+    this._hubConnection.invoke('abandonGame', value)
       .catch(this._errorHandler);
   }
 
