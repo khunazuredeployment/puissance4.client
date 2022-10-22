@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
+import { filter } from 'rxjs';
 import { MessageState } from './core/states/message.reducer';
 
 @Component({
@@ -12,16 +13,12 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly _store: Store<{ message: MessageState }>,
-    private readonly _cd: ChangeDetectorRef,
     private readonly _messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
-    this._store.select(state => state.message).subscribe(message => {
-      if(message.summary) {
-        this._messageService.add(message);
-        this._cd.detectChanges();
-      }
-    });
+    this._store.select(state => state.message)
+      .pipe(filter(m => !m.summary))
+      .subscribe(message => this._messageService.add(message));
   }
 }

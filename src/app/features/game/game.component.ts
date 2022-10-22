@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { takeUntil, finalize } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { DestroyedComponent } from 'src/app/core/components/destroyed.component';
 import { SessionState, stop } from 'src/app/core/states/session.reducers';
 import { GameDetailsModel } from './models/game-details.model';
@@ -10,8 +10,7 @@ import { GamesState } from './states/games.reducers';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./game.component.scss']
 })
 export class GameComponent extends DestroyedComponent implements OnInit {
 
@@ -22,7 +21,6 @@ export class GameComponent extends DestroyedComponent implements OnInit {
 
   constructor(
     private readonly _store: Store<{session: SessionState, gamesFeatures: {games: GamesState}}>,
-    private readonly _cd: ChangeDetectorRef,
     private readonly _router: Router,
   ) { super(); }
 
@@ -37,7 +35,6 @@ export class GameComponent extends DestroyedComponent implements OnInit {
           this.menuOpen = false;
         }
         this.currentGame = currentGame;
-        this._cd.detectChanges();
       });
   }
 
@@ -48,13 +45,11 @@ export class GameComponent extends DestroyedComponent implements OnInit {
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
-    this._cd.detectChanges();
   }
 
   
   toggleCreateGameDialog(open: boolean) {
     this.dialogOpen = open;
-    this._cd.detectChanges();
   }
 
 }
