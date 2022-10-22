@@ -30,10 +30,10 @@ export class BoardComponent extends DestroyedComponent implements OnInit {
   ) { super(); }
 
   ngOnInit(): void {
-    this._store.select(state => state.gamesFeatures.games.currentGame)
+    this._store.select(state => state.gamesFeatures.games)
       .pipe(takeUntil(this.destroyed))
-      .subscribe(game => {
-        this.currentGame = game;
+      .subscribe(({currentGame}) => {
+        this.currentGame = currentGame;
         this._cd.detectChanges();
       });
 
