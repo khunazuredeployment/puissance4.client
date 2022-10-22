@@ -1,4 +1,6 @@
-<ng-content></ng-content>
+<div *ngIf="!currentGame" class="p-2">
+    <button pButton class="p-button-success" (click)="onClick($event)">Créer une partie</button>
+</div>
 
 <p-table [value]="allGames">
     <ng-template pTemplate="header">

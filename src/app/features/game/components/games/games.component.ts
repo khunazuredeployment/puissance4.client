@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { takeUntil, finalize } from 'rxjs';
 import { DestroyedComponent } from 'src/app/core/components/destroyed.component';
@@ -15,6 +15,9 @@ import { GamesState } from '../../states/games.reducers';
   styleUrls: ['./games.component.scss']
 })
 export class GamesComponent extends DestroyedComponent implements OnInit {
+
+  @Output()
+  createButtonclick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
   allGames!: GameModel[];
   currentGame!: GameDetailsModel|null;
@@ -43,6 +46,10 @@ export class GamesComponent extends DestroyedComponent implements OnInit {
 
   watch(gameId: number) {
     this._gameService.watch({ gameId })
+  }
+
+  onClick(event: MouseEvent) {
+    this.createButtonclick.emit(event);
   }
 
 }

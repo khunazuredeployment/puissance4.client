@@ -22,6 +22,10 @@ export class CreateGameComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  closeDialog() {
+    this.close.emit(false);
+  }
+
   createGame() {
     this._gameService.createGame({ color: this.selectedColor });
     this.close.emit(false);

@@ -15,6 +15,7 @@ import { SharedModule } from './shared/shared.module';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
+import { MessageReducer } from './core/states/message.reducer';
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({keys: ['session'], rehydrate: true })(reducer);
@@ -30,7 +31,8 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
     BrowserAnimationsModule,
     AppRoutingModule,
     StoreModule.forRoot({
-      session: SessionReducer
+      session: SessionReducer,
+      message: MessageReducer,
     }, {metaReducers, runtimeChecks: {
 			strictStateImmutability: false,
 			strictActionImmutability: false,

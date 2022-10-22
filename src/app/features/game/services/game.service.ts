@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
+import { addMessage } from 'src/app/core/states/message.reducer';
 import { SessionState } from 'src/app/core/states/session.reducers';
 import { environment } from 'src/environments/environment';
 import { GameStatusEnum } from '../enums/game-status.enum';
@@ -20,16 +21,15 @@ export class GameService {
   private userId: number|undefined;
 
   private readonly _errorHandler = () => {
-    this._messageService.add({ 
+    this._store.dispatch(addMessage({ 
       severity: 'error', 
       summary: 'Erreur inconnue',
       sticky: true,
-    });
+    }));
   }
 
   constructor(
     private readonly _store: Store<{ session: SessionState }>,
-    private readonly _messageService: MessageService,
   ) { 
     this._store.select(state => state.session).subscribe(async ({id, token}) => {
       this.userId = id;
@@ -79,7 +79,7 @@ export class GameService {
   }
 
   private async startConnection() {
-    await this._hubConnection.start()
+    this._hubConnection.start()
       .catch(this._errorHandler);
 
     this._hubConnection.on('allGames', (games: GameModel[]) => {
@@ -92,19 +92,20 @@ export class GameService {
 
     this._hubConnection.on('currentGameClosed',  (game: GameDetailsModel) => {
       if(game?.status === GameStatusEnum.CLOSED) {
-        this._messageService.add({ 
+        this._store.dispatch(addMessage({ 
           severity: 'info', 
           summary: 'La partie est terminée',
           sticky: true,
-        });
+        }));
         if(game.winnerId) {
-          this._messageService.add({ 
+          this._store.dispatch(addMessage({ 
             severity: 'info', 
             summary: `Le vainqueur est ${game.winnerUsername}`,
             sticky: true,
-          });
+          }));
         }
       }
+      this._store.dispatch(loadCurrentGame({ game }));
     });
     
     this._hubConnection.on('newCoin', (coin: CoinModel) => {
@@ -112,11 +113,11 @@ export class GameService {
     });
 
     this._hubConnection.on('message', (message: MessageModel) => {
-      this._messageService.add({ 
+      this._store.dispatch(addMessage({ 
         severity: message.severity.toLocaleLowerCase(), 
         summary: message.content,
         sticky: message.sticky,
-      });
+      }));
     });
   }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { takeUntil, finalize } from 'rxjs';
@@ -10,7 +10,8 @@ import { GamesState } from './states/games.reducers';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss']
+  styleUrls: ['./game.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GameComponent extends DestroyedComponent implements OnInit {
 
@@ -26,9 +27,9 @@ export class GameComponent extends DestroyedComponent implements OnInit {
   ) { super(); }
 
   ngOnInit(): void {
-    this._store.select(state => state.gamesFeatures.games)
+    this._store.select(state => state.gamesFeatures.games.currentGame)
       .pipe(takeUntil(this.destroyed))
-      .subscribe(({currentGame}) => {
+      .subscribe((currentGame) => {
         if(!currentGame) {
           this.menuOpen = true;
         }
@@ -47,11 +48,13 @@ export class GameComponent extends DestroyedComponent implements OnInit {
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+    this._cd.detectChanges();
   }
 
   
-  openCreateGameDialog() {
-    this.dialogOpen = true;
+  toggleCreateGameDialog(open: boolean) {
+    this.dialogOpen = open;
+    this._cd.detectChanges();
   }
 
 }
