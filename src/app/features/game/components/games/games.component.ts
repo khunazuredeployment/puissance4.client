@@ -29,12 +29,18 @@ export class GamesComponent extends DestroyedComponent implements OnInit {
 
   ngOnInit(): void {
     this._store.select(state => state.gamesFeatures.games.allGames)
-      .pipe(takeUntil(this.destroyed), finalize(() => this._cd.detectChanges()))
-      .subscribe(allGames => this.allGames = allGames);
+      .pipe(takeUntil(this.destroyed))
+      .subscribe(allGames => {
+        this.allGames = allGames;
+        this._cd.detectChanges();
+      });
 
     this._store.select(state => state.gamesFeatures.games.currentGame)
-      .pipe(takeUntil(this.destroyed), finalize(() => this._cd.detectChanges()))
-      .subscribe(game => this.currentGame = game);
+      .pipe(takeUntil(this.destroyed))
+      .subscribe(game => {
+        this.currentGame = game;
+        this._cd.detectChanges();
+      });
   }
 
   join(gameId: number) {

@@ -27,7 +27,7 @@ export class GameComponent extends DestroyedComponent implements OnInit {
 
   ngOnInit(): void {
     this._store.select(state => state.gamesFeatures.games.currentGame)
-      .pipe(takeUntil(this.destroyed), finalize(() => this._cd.detectChanges()))
+      .pipe(takeUntil(this.destroyed))
       .subscribe(game => {
         if(!game) {
           this.menuOpen = true;
@@ -36,6 +36,7 @@ export class GameComponent extends DestroyedComponent implements OnInit {
           this.menuOpen = false;
         }
         this.currentGame = game;
+        this._cd.detectChanges();
       });
   }
 
