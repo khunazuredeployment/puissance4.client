@@ -28,17 +28,11 @@ export class GamesComponent extends DestroyedComponent implements OnInit {
   ) { super(); }
 
   ngOnInit(): void {
-    this._store.select(state => state.gamesFeatures.games.allGames)
+    this._store.select(state => state.gamesFeatures.games)
       .pipe(takeUntil(this.destroyed))
-      .subscribe(allGames => {
+      .subscribe(({allGames, currentGame}) => {
         this.allGames = allGames;
-        this._cd.detectChanges();
-      });
-
-    this._store.select(state => state.gamesFeatures.games.currentGame)
-      .pipe(takeUntil(this.destroyed))
-      .subscribe(game => {
-        this.currentGame = game;
+        this.currentGame = currentGame;
         this._cd.detectChanges();
       });
   }
