@@ -1,4 +1,4 @@
-<h1>Se Connecter</h1>
+<h1>Connexion</h1>
 <form [formGroup]="fg" (ngSubmit)="submit()">
     <div class="input-group">
         <input pInputText formControlName="username">
@@ -7,6 +7,6 @@
         <input type="password" pInputText formControlName="password">
     </div>
     <div class="input-group">
-        <button pButton label="Se connecter"></button>
+        <button [loading]="isLoading" pButton label="Se connecter"></button>
     </div>
 </form>

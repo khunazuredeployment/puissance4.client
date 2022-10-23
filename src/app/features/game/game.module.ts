@@ -9,6 +9,8 @@ import { StoreModule } from '@ngrx/store';
 import { GamesReducer } from './states/games.reducers';
 import { BoardComponent } from './components/board/board.component';
 import { GamesComponent } from './components/games/games.component';
+import { GameHubStatusToStringPipe } from './pipes/game-hub-status-to-string.pipe';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -16,13 +18,14 @@ import { GamesComponent } from './components/games/games.component';
     GameComponent,
     CreateGameComponent,
     BoardComponent,
-    GamesComponent
+    GamesComponent,
+    GameHubStatusToStringPipe
   ],
   imports: [
     CommonModule,
     GameRoutingModule,
     SharedModule,
     StoreModule.forFeature( 'gamesFeatures', { games: GamesReducer } ),
-  ]
+  ],
 })
 export class GameModule { }

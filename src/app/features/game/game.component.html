@@ -1,14 +1,18 @@
-<header class="p-2">
+<header>
     <div class="left">
         <button pButton class="p-button-outlined mobile-hidden" (click)="toggleMenu()" [icon]="menuOpen ? 'pi pi-times' : 'pi pi-bars'"></button>
     </div>
     <div class="right">
+        <p class="connectedUser">{{ session.username }}</p>
         <button pButton class="p-button-outlined" (click)="logout()" icon="pi pi-power-off"></button>
     </div>
 </header>
 <main>
     <aside [ngClass]="{menuOpen}" (createButtonclick)="toggleCreateGameDialog(true)" app-games></aside>
     <app-board></app-board>
+    <app-loader *ngIf="gameHubStatus !== GameHubStatusEnum.CONNECTED" [zIndex]="1001">
+        <div>{{ gameHubStatus | gameHubStatusToString }}</div>
+    </app-loader>
 </main>
 <p-dialog [modal]="true"
           [visible]="dialogOpen"
@@ -16,4 +20,4 @@
           [breakpoints]="{'992px': '95vw'}"
           [style]="{width: '50vw'}">
     <app-create-game (close)="toggleCreateGameDialog(false)"></app-create-game>
-</p-dialog> 
+</p-dialog>

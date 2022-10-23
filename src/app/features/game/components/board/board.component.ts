@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { takeUntil } from 'rxjs';
 import { DestroyedComponent } from 'src/app/core/components/destroyed.component';
@@ -23,6 +23,7 @@ export class BoardComponent extends DestroyedComponent implements OnInit {
   userId?: number;
 
   constructor(
+    private readonly _cd: ChangeDetectorRef,
     private readonly _store: Store<{session: SessionState, gamesFeatures: {games: GamesState}}>,
     private readonly _gameService: GameService,
   ) { super(); }
@@ -30,11 +31,17 @@ export class BoardComponent extends DestroyedComponent implements OnInit {
   ngOnInit(): void {
     this._store.select(state => state.gamesFeatures.games)
       .pipe(takeUntil(this.destroyed))
-      .subscribe(({currentGame}) => this.currentGame = currentGame);
+      .subscribe(({currentGame}) => {
+        this.currentGame = currentGame;
+        this._cd.detectChanges();
+      });
 
     this._store.select(state => state.session.id)
       .pipe(takeUntil(this.destroyed))
-      .subscribe(id => this.userId = id);
+      .subscribe(id => {
+        this.userId = id;
+        this._cd.detectChanges();
+      });
   }
 
   play(column: number) {

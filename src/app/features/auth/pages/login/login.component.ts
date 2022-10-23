@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
+  isLoading: boolean = false;
   fg!: FormGroup
 
   constructor(
@@ -32,16 +33,22 @@ export class LoginComponent implements OnInit {
 
   submit() {
     if(this.fg.valid) {
+      this.isLoading = true;
       this._authService.login(this.fg.value).subscribe({ 
         next: data => {
-          this._store.dispatch(start(data));
+          console.log(data);
+          
+          this._store.dispatch(start({ auth: data }));
           this._messageService.add({ severity: 'info', summary: 'Bienvenue' });
           this._router.navigate(['']);
         }, error: () => {
           this._messageService.add({ severity: 'error', summary: 'Bad credentials' });
+          this.isLoading = false;
         }
       });
     }
   }
+
+
 
 }

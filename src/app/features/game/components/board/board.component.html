@@ -1,31 +1,28 @@
 
 <ng-container *ngIf="currentGame">
-    <div class="actions p-2">
+    <div class="actions">
         <div class="players">
             <span class="player" [ngClass]="{ connected: currentGame.redIsConnected }">{{ currentGame.redUsername }}</span>
             VS  
             <span class="player" [ngClass]="{ connected: currentGame.yellowIsConnected }">{{ currentGame.yellowUsername }}</span>  
         </div>
-        <button pButton class="p-button-danger" (click)="leaveGame()">Quitter la partie</button>
+        <button pButton class="p-button-danger" (click)="leaveGame()" icon="pi pi-times"></button>
     </div>
     <div class="board-container">
         <div class="currentGame">
-            <div class="board">
+            <div class="board" #board>
                 <div class="column" *ngFor="let col of currentGame.grid; let index = index"
                         (click)="play(index)">
                     <div class="tile" *ngFor="let tile of col; let index = index">
                         <div *ngIf="tile !== null" 
-                                class="coin" 
-                                [ngClass]="{ red: tile === ColorEnum.RED, yellow: tile === ColorEnum.YELLOW }"
-                                [ngStyle]="{ transform: 'translateY(' + (-100 * (6 - index)) + '%)', animationDuration: (0.1 * (6 - index)) + 's' }"></div>
+                              class="coin" 
+                              [ngClass]="{ red: tile === ColorEnum.RED, yellow: tile === ColorEnum.YELLOW }"
+                              [ngStyle]="{ transform: 'translateY(' + (-100 * (6 - index)) + '%)', animationDuration: (0.1 * (6 - index)) + 's' }"></div>
                     </div>
                 </div>
-                <div class="loader-container" *ngIf="currentGame.status === GameStatusEnum.WAITING_FOR_PLAYERS">
-                    <div class="loader">
-                        <p-progressSpinner></p-progressSpinner>
-                        <p>Waiting for players ...</p>
-                    </div>
-                </div>
+                <app-loader *ngIf="currentGame.status === GameStatusEnum.WAITING_FOR_PLAYERS">
+                    <div>Waiting for players ...</div>
+                </app-loader>
             </div>
         </div>
     </div>

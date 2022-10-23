@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { takeUntil } from 'rxjs';
 import { DestroyedComponent } from 'src/app/core/components/destroyed.component';
@@ -25,6 +25,7 @@ export class GamesComponent extends DestroyedComponent implements OnInit {
   GameStatusEnum = GameStatusEnum;
 
   constructor(
+    private readonly _cd: ChangeDetectorRef,
     private readonly _store: Store<{session: SessionState, gamesFeatures: {games: GamesState}}>,
     private readonly _gameService: GameService,
   ) { super(); }
@@ -35,6 +36,7 @@ export class GamesComponent extends DestroyedComponent implements OnInit {
       .subscribe(({allGames, currentGame}) => {
         this.allGames = allGames;
         this.currentGame = currentGame;
+        this._cd.detectChanges();
       });
   }
 

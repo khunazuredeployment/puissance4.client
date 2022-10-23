@@ -2,15 +2,18 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
-import { addMessage } from 'src/app/core/states/message.reducer';
+import { newMessage } from 'src/app/core/states/messages.reducers';
 import { SessionState } from 'src/app/core/states/session.reducers';
 import { environment } from 'src/environments/environment';
-import { GameStatusEnum } from '../enums/game-status.enum';
+import { GameHubStatusEnum } from '../enums/game-hub-status.enum';
+import { GameResultEnum } from '../enums/game-result.enum';
 import { CoinModel } from '../models/coin.model';
 import { GameDetailsModel } from '../models/game-details.model';
+import { GamePlayersConnectionModel } from '../models/game-players-connection.model';
+import { GameResultModel } from '../models/game-result.model';
 import { GameModel } from '../models/game.model';
 import { MessageModel } from '../models/message.model';
-import { loadGames, loadCurrentGame, newCoin } from '../states/games.reducers';
+import { loadGames, loadCurrentGame, newCoin, changeGameConnectionState, changeGameResult, changeGameHubStatus } from '../states/games.reducers';
 
 @Injectable({
   providedIn: 'root'
@@ -18,24 +21,24 @@ import { loadGames, loadCurrentGame, newCoin } from '../states/games.reducers';
 export class GameService {
 
   private _hubConnection!: HubConnection;
-  private userId: number|undefined;
 
-  private readonly _errorHandler = () => {
-    this._store.dispatch(addMessage({ 
+  private readonly _errorHandler = (error: any) => {
+    this._store.dispatch(newMessage({ message : { 
       severity: 'error', 
-      summary: 'Erreur inconnue',
+      content: error.message,
       sticky: true,
-    }));
+    }}));
   }
 
   constructor(
     private readonly _store: Store<{ session: SessionState }>,
+    private readonly _messageService: MessageService,
   ) { 
-    this._store.select(state => state.session).subscribe(async ({id, token}) => {
-      this.userId = id;
+    this._store.select(state => state.session).subscribe(async ({token}) => {
       if(!token) {
         this._hubConnection?.stop();
         this._store.dispatch(loadCurrentGame({ game: null }));
+        this._store.dispatch(changeGameHubStatus({status: GameHubStatusEnum.NOT_CONNECTED}));
       } else {
         this.createConnection(token);
         await this.startConnection();
@@ -80,7 +83,21 @@ export class GameService {
 
   private async startConnection() {
     this._hubConnection.start()
-      .catch(this._errorHandler);
+      .then(() => {
+        this._store.dispatch(changeGameHubStatus({status: GameHubStatusEnum.CONNECTED}));
+      });
+
+    this._hubConnection.onclose(() => {
+      this._store.dispatch(changeGameHubStatus({status: GameHubStatusEnum.RECONNECTING}));
+    });
+    
+    this._hubConnection.onreconnecting(() => {
+      this._store.dispatch(changeGameHubStatus({status: GameHubStatusEnum.RECONNECTING}));
+    });
+
+    this._hubConnection.onreconnected(() => {
+      this._store.dispatch(changeGameHubStatus({status: GameHubStatusEnum.CONNECTED}));
+    });
 
     this._hubConnection.on('allGames', (games: GameModel[]) => {
       this._store.dispatch(loadGames({ games }));
@@ -90,22 +107,22 @@ export class GameService {
       this._store.dispatch(loadCurrentGame({ game }));
     });
 
-    this._hubConnection.on('currentGameClosed',  (game: GameDetailsModel) => {
-      if(game?.status === GameStatusEnum.CLOSED) {
-        this._store.dispatch(addMessage({ 
+    this._hubConnection.on('gamePlayersConnection',  (game: GamePlayersConnectionModel) => {
+      this._store.dispatch(changeGameConnectionState({ game }));
+    });
+
+    this._hubConnection.on('result',  (game: GameResultModel) => {
+      this._store.dispatch(changeGameResult({ game }));
+      if(game.result) {
+        this._store.dispatch(newMessage({ message : { 
           severity: 'info', 
-          summary: 'La partie est terminée',
+          content: game.result === 
+            GameResultEnum.RED_WIN ? `Le joueur rouge (${game.winnerUsername}) a gagné` : 
+            GameResultEnum.YELLOW_WIN ? `Le joueur jaune (${game.winnerUsername}) a gagné` :
+            'Partie nulle',
           sticky: true,
-        }));
-        if(game.winnerId) {
-          this._store.dispatch(addMessage({ 
-            severity: 'info', 
-            summary: `Le vainqueur est ${game.winnerUsername}`,
-            sticky: true,
-          }));
-        }
+        }}));
       }
-      this._store.dispatch(loadCurrentGame({ game }));
     });
     
     this._hubConnection.on('newCoin', (coin: CoinModel) => {
@@ -113,11 +130,7 @@ export class GameService {
     });
 
     this._hubConnection.on('message', (message: MessageModel) => {
-      this._store.dispatch(addMessage({ 
-        severity: message.severity.toLocaleLowerCase(), 
-        summary: message.content,
-        sticky: message.sticky,
-      }));
+      this._store.dispatch(newMessage({ message }));
     });
   }
 

@@ -14,8 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { MessageModule } from 'primeng/message';
-import { MessageReducer } from './core/states/message.reducer';
+import { MessagesReducer } from './core/states/messages.reducers';
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({keys: ['session'], rehydrate: true })(reducer);
@@ -32,7 +31,7 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
     AppRoutingModule,
     StoreModule.forRoot({
       session: SessionReducer,
-      message: MessageReducer,
+      messages: MessagesReducer,
     }, {metaReducers, runtimeChecks: {
 			strictStateImmutability: false,
 			strictActionImmutability: false,
@@ -40,7 +39,6 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     CoreModule,
     ToastModule,
-    MessageModule,
     SharedModule,
     HttpClientModule,
   ],

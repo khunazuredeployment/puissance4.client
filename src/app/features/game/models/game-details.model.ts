@@ -1,4 +1,5 @@
 import { ColorEnum } from "../enums/color.enum";
+import { GameResultEnum } from "../enums/game-result.enum";
 import { GameStatusEnum } from "../enums/game-status.enum";
 
 export interface GameDetailsModel {
@@ -13,4 +14,5 @@ export interface GameDetailsModel {
     grid: (ColorEnum|null)[][];
     winnerUsername: string|null;
     winnerId: number|null;
+    Result: GameResultEnum|null;
 }

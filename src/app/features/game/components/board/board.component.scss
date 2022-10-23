@@ -10,6 +10,7 @@
         justify-content: flex-end;
         align-items: center;
         border-bottom: 1px solid gray;
+        padding: 10px 20px;
         > .players {
             flex: 1;
             padding: 10px;
@@ -38,15 +39,18 @@
     .board-container {
         height: 100%;
         width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
         .currentGame {
             width: 100%;
             display: flex;
             justify-content: center;
+            padding: 20px 60px 0 60px;
             >.board {
-                width: 80%;
+                width: 100%;
                 display: flex;
                 position: relative;
                 >.column {
@@ -56,7 +60,7 @@
                     flex-direction: column-reverse;
                     position: relative;
                     &:hover>.tile::after {
-                        background: radial-gradient(circle, transparent 55%, cornflowerblue 55%, cornflowerblue 100%);
+                        background: radial-gradient(circle, transparent 60%, cornflowerblue 60%, cornflowerblue 100%);
                     }
                     >.tile {
                         flex: 1;
@@ -68,7 +72,7 @@
                             top: 0;
                             height: 100%;
                             width: 100%;
-                            background: radial-gradient(circle, transparent 55%, #1F4788 55%, #1F4788 100%);
+                            background: radial-gradient(circle, transparent 60%, #1F4788 60%, #1F4788 100%);
                             background-position: center center;
                             background-size: 100% 100%;
                             background-repeat: no-repeat;;
@@ -94,23 +98,11 @@
                         }
                     }
                 }
-                >.loader-container {
-                    height: 100%;
-                    width: 100%;
-                    top: 0;
-                    left: 0;
-                    position: absolute;
-                    background-color: rgba(0,0,0,.3);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    .loader {
-                        text-align: center;
-                        padding: 30px;
-                        background-color: white;
-                        border: 1px solid gray;
-                    } 
-                }
+            }
+        }
+        @media screen and (max-width: 554px) {
+            .currentGame {
+                padding: 5px;
             }
         }
     }

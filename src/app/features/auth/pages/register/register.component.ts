@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterComponent implements OnInit {
 
+  isLoading: boolean = false;
   fg!: FormGroup
 
   constructor(
@@ -29,11 +30,14 @@ export class RegisterComponent implements OnInit {
 
   submit() {
     if(this.fg.valid) {
+      this.isLoading = true;
       this._authService.register(this.fg.value).subscribe({ 
-        next: data => {
+        next: () => {
           this._messageService.add({ severity: 'info', summary: 'Enregistrement ok' });
+          this.isLoading = false;
         }, error: () => {
           this._messageService.add({ severity: 'error', summary: 'Une erreur est survenue' });
+          this.isLoading = false;
         }
       });
     }
