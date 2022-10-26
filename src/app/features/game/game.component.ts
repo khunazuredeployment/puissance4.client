@@ -72,6 +72,7 @@ export class GameComponent extends DestroyedComponent implements OnInit {
   
   toggleCreateGameDialog(open: boolean) {
     this.dialogOpen = open;
+    this._cd.detectChanges();
   }
 
 }
