@@ -53,9 +53,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE }}
           
-      - name: Build and push Docker image to ACR
-        run: |
-          IMAGE_TAG=latest
-          az acr build \
-            --registry ${{ env.REGISTRY_NAME }} \
-            --image ${{ env.IMAGE_NAME }}:$IMAGE_TAG \
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          images: '${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest'
