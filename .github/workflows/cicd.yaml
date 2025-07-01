@@ -26,6 +26,7 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE }}
+          enable-AzPSSession: true 
 
       - name: Docker Login to ACR
         uses: azure/docker-login@v2
