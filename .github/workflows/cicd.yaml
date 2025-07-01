@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_NAME: "puissance4AngularRegistry"
-  IMAGE_NAME: "puissance4AngularImage"
+  REGISTRY_NAME: "puissance4containerregistry"
+  IMAGE_NAME: "puissance4image"
   ANGULAR_APP_NAME: "puissance4Angular"
   AZURE_RESOURCE_GROUP: "testdevops"
   AZURE_WEBAPP_NAME: "puissance4-client-app"
@@ -53,9 +53,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE }}
           
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          images: '${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.image_tag }}'
+      - name: Build and push Docker image to ACR
+        run: |
+          IMAGE_TAG=latest
+          az acr build \
+            --registry ${{ env.REGISTRY_NAME }} \
+            --image ${{ env.IMAGE_NAME }}:$IMAGE_TAG \
