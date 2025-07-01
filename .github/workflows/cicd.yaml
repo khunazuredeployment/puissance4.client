@@ -10,7 +10,7 @@ env:
   IMAGE_NAME: "puissance4AngularImage"
   ANGULAR_APP_NAME: "puissance4Angular"
   AZURE_RESOURCE_GROUP: "testdevops"
-  AZURE_WEBAPP_NAME: "puissance4-client"
+  AZURE_WEBAPP_NAME: "puissance4-client-app"
 
 jobs:
   build:
