@@ -53,9 +53,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE }}
           
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+      - name: Docker Login to ACR
+        uses: azure/docker-login@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          images: '${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest'
+          login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
+        # Cette action utilise les identifiants de l'étape "Azure Login" précédente
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: . # Chemin vers votre Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY_NAME }}.azurecr.io/samples/${{ env.IMAGE_NAME }}:latest
