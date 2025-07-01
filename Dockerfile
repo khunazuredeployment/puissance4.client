@@ -13,6 +13,6 @@ FROM nginx:stable-alpine AS production
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=builder /app/dist/your-app-name /usr/share/nginx/html
+COPY --from=builder /app/dist/ng-puissance4 /usr/share/nginx/html
 
 EXPOSE 80
