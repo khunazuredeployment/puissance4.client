@@ -1,0 +1,27 @@
+@if(game) {
+  <div appGameRowPlayer
+       [player]="{
+         id: game.redPlayerId,
+         name: game.redPlayerName,
+         status: game.redPlayerStatus,
+       }"
+       [versusAI]="game.versusAI"
+       [aiDepth]="game.aiDepth"
+       [opponentPlayerId]="game.yellowPlayerId">
+  </div>
+  <div class="justify-content-center">
+    {{gameResult}}
+  </div>
+  <div appGameRowPlayer
+       class="flex-row-reverse"
+       [player]="{
+         id: game.yellowPlayerId,
+         name: game.yellowPlayerName,
+         status: game.yellowPlayerStatus,
+       }"
+       [versusAI]="game.versusAI"
+       [aiDepth]="game.aiDepth"
+       [opponentPlayerId]="game.redPlayerId">
+  </div>
+}
+
