@@ -1,4 +1,4 @@
 export const environment = {
-  apiUrl: 'https://puissance4-server-app.azurewebsites.net/api',
-  wsUrl: 'https://puissance4-server-app.azurewebsites.net/ws',
+  apiUrl: 'https://khungroup-api.azurewebsites.net/api',
+  wsUrl: 'https://khungroup-api.azurewebsites.net/ws',
 };

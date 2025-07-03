@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_NAME: "puissance4containerregistry"
+  REGISTRY_NAME: "demodevopscontainerregistry"
   IMAGE_NAME: "puissance4image"
-  AZURE_WEBAPP_NAME: "puissance4-client-app"
+  AZURE_WEBAPP_NAME: "demodevops-client"
   # J'ai enlevé les variables non utilisées pour plus de clarté
 
 jobs:
