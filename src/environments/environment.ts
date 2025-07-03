@@ -1,4 +1,4 @@
 export const environment = {
-  apiUrl: 'https://khungroup-api.azurewebsites.net/api',
-  wsUrl: 'https://khungroup-api.azurewebsites.net/ws',
+  apiUrl: 'https://demodevops-api.azurewebsites.net/api',
+  wsUrl: 'https://demodevops-api.azurewebsites.net/ws',
 };
